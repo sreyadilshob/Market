@@ -2,6 +2,7 @@ package com.kk.market.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,7 +10,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -21,16 +21,16 @@ import com.kk.market.model.StockPrice;
 import com.kk.market.model.StockPriceDetails;
 import com.kk.market.model.TimeSeries;
 
-@Profile("dev")
+
 @Service
 public class MarketServiceImpl implements MarketService {
 	@Autowired
 	RestTemplate restTemplate;
 
-	@Value("${url.market.api}")
-	String marketkApiUrl;
+	@Value("${api.av.symbol.overview}")
+	String overviewApiUrl;
 
-	@Value("${url.timeseries.api}")
+	@Value("${api.av.price.timeseries}")
 	String timeSeriesApiUrl;
 
 	@Value("${url.market.apikey}")
@@ -38,7 +38,7 @@ public class MarketServiceImpl implements MarketService {
 
 	@Override
 	public Market getMarketBySymbol(String symbol) {
-		ResponseEntity<Market> response = restTemplate.getForEntity(marketkApiUrl, Market.class, symbol, apiKey);
+		ResponseEntity<Market> response = restTemplate.getForEntity(overviewApiUrl, Market.class, symbol, apiKey);
 
 		if (response.getStatusCode().is2xxSuccessful()) {
 			System.out.println("Response status is successful");
@@ -53,15 +53,13 @@ public class MarketServiceImpl implements MarketService {
 	public StockPriceDetails getStockPricesBySymbol(String symbol) throws ParseException {
 		ResponseEntity<TimeSeries> response = restTemplate.getForEntity(timeSeriesApiUrl, TimeSeries.class, symbol,	apiKey);
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSX");
-		
 		if (response.getStatusCode().is2xxSuccessful()) {
-			System.out.println("Response status is successful");
+			System.out.println(symbol+": Market Price details Fetched successfully");
 			List<StockPrice> stockPricelist = new ArrayList<>();
 			TimeSeries priceData = response.getBody();
 			for (Map.Entry<String, Price> entry : priceData.getPriceData().entrySet()) {
 				StockPrice stockPrice = new StockPrice();
-				stockPrice.setDate(sdf.parse(entry.getKey() +"T00:00:00.0000+00:00"));	
+				stockPrice.setDate(LocalDate.parse(entry.getKey()));	
 				stockPrice.setOpen(entry.getValue().getOpen());
 				stockPrice.setHigh(entry.getValue().getHigh());
 				stockPrice.setLow(entry.getValue().getLow());

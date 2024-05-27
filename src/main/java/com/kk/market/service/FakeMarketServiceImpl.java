@@ -1,7 +1,7 @@
 package com.kk.market.service;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Arrays;
 
 import org.springframework.context.annotation.Profile;
@@ -25,10 +25,8 @@ public class FakeMarketServiceImpl implements MarketService {
 
 		StockPriceDetails stockpriceDetails = new StockPriceDetails();
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSX");
-		
 		StockPrice stockPrice = new StockPrice();
-		stockPrice.setDate(sdf.parse("2024-03-01T00:00:00.0000+00:00"));
+		stockPrice.setDate(LocalDate.parse("2024-04-30"));
 		
 		stockPrice.setClose(1234.78);
 		stockPrice.setHigh(1255.88);
@@ -38,7 +36,7 @@ public class FakeMarketServiceImpl implements MarketService {
 		
 		
 		StockPrice stockPrice1 = new StockPrice();
-		stockPrice1.setDate(sdf.parse("2024-03-02T00:00:00.0000+00:00"));
+		stockPrice1.setDate(LocalDate.parse("2024-04-29"));
 		
 		stockPrice1.setClose(1234.78);
 		stockPrice1.setHigh(1255.88);
@@ -46,7 +44,16 @@ public class FakeMarketServiceImpl implements MarketService {
 		stockPrice1.setLow(1231.99);
 		stockPrice1.setVolume(3452432D);
 		
-		stockpriceDetails.setStockPriceList(Arrays.asList(stockPrice,stockPrice1));
+		StockPrice stockPrice2 = new StockPrice();
+		stockPrice2.setDate(LocalDate.parse("2024-04-28"));
+		
+		stockPrice2.setClose(1234.78);
+		stockPrice2.setHigh(1255.88);
+		stockPrice2.setOpen(1234.77);
+		stockPrice2.setLow(1231.99);
+		stockPrice2.setVolume(3452432D);
+		
+		stockpriceDetails.setStockPriceList(Arrays.asList(stockPrice,stockPrice1,stockPrice2));
 		stockpriceDetails.setSymbol(symbol);
 
 		return stockpriceDetails;

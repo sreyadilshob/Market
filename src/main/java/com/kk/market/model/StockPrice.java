@@ -1,19 +1,20 @@
 package com.kk.market.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class StockPrice {
-	private Date date;
+	private LocalDate date;
 	private Double open;
 	private Double high;
 	private Double low;
 	private Double close;
 	private Double volume;
 	
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 	public Double getOpen() {
@@ -46,8 +47,4 @@ public class StockPrice {
 	public void setVolume(Double volume) {
 		this.volume = volume;
 	}
-	
-	
-	
-
 }
